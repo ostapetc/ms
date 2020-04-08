@@ -27,17 +27,17 @@ func init() {
 func main() {
 	server := &http.Server{
 		Handler:      rpc.NewIDGeneratorServer(&handler.Handler{}, nil),
-		Addr:         ":81",
+		Addr:         ":80",
 		ReadTimeout:  1 * time.Second,
 		WriteTimeout: 1 * time.Second,
 	}
-
-	log.Info("Start server")
 
 	go func() {
 		err := server.ListenAndServe()
 		log.Fatal(err)
 	}()
+
+	log.Info("Server started")
 
 	// Graceful Shutdown
 	waitForShutdown(server)

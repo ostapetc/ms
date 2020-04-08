@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package ms.users;
+option go_package = "rpc";
+
+// Haberdasher service makes hats for clients.
+service Users {
+  // MakeHat produces a hat of mysterious, randomly-selected color!
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+}
+
+// Request
+message RegisterRequest {
+  string username = 1;
+  string password = 2;
+}
+
+// Response
+message RegisterResponse {
+  int64 id = 1;
+  string token = 2;
+}
