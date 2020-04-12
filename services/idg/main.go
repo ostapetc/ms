@@ -3,8 +3,8 @@ package main
 import (
 	"flag"
 	log "github.com/sirupsen/logrus"
-	"ms/services/users/handler"
-	"ms/services/users/rpc"
+	"ms/services/idg/handler"
+	"ms/services/idg/rpc"
 	"ms/utils"
 	"net/http"
 	"os"
@@ -20,11 +20,10 @@ func init() {
 
 func main() {
 	addr := flag.String("addr", addr, "server addr")
-
 	flag.Parse()
 
 	server := &http.Server{
-		Handler:      rpc.NewUsersServer(handler.NewHandler(), nil),
+		Handler:      rpc.NewIDGeneratorServer(&handler.Handler{}, nil),
 		Addr:         *addr,
 		ReadTimeout:  1 * time.Second,
 		WriteTimeout: 1 * time.Second,

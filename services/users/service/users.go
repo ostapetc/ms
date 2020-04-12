@@ -31,7 +31,7 @@ func NewUsersService(users *Storage, registerValidator Validator) *UsersService 
 	}
 }
 
-func (s *UsersService) Register(user *User) (authKey string, err error) {
+func (s *UsersService) Register(user *User) (token string, err error) {
 	s.storage.mx.Lock()
 	defer s.storage.mx.Unlock()
 

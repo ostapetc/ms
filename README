@@ -1,1 +1,11 @@
-protoc --proto_path=$GOPATH/src:. --twirp_out=. --go_out=. ./idgenerator/rpc/service.proto
+protoc --proto_path=$GOPATH/src:. --twirp_out=./ --go_out=./ ./services/idg/rpc/service.proto
+docker build -t ms-idg . -f ./idg.Dockerfile
+docker run -p 80:80 ms-idg:latest
+
+protoc --proto_path=$GOPATH/src:. --twirp_out=./ --go_out=./ ./services/users/rpc/service.proto
+docker build -t ms-users -f ./users.Dockerfile .
+docker run -p 81:80 ms-users
+
+go run services/users/client/register.go -addr http://localhost:81 -idgAddr=http://localhost:80 -username user6 -password 123232
+
+@TODO: read from env idg service in users service

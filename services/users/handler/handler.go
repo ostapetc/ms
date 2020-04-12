@@ -1,39 +1,58 @@
 package handler
 
-//type Users interface {
-//	// MakeHat produces a hat of mysterious, randomly-selected color!
-//	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
-//}
-
 import (
 	"context"
-	rpc2 "github.com/ostapetc/ms/tree/master/idgenerator/rpc"
-	"github.com/ostapetc/ms/tree/master/users/rpc"
-	//idgenerator "github.com/ostapetc/ms/tree/master/idgenerator/rpc"
-	"github.com/ostapetc/ms/tree/master/users/service"
+	idgRpc "ms/services/idg/rpc"
+	"ms/services/users/rpc"
+	"ms/services/users/service"
 	"net/http"
 )
 
 type Handler struct {
-	userService service.UsersService
+	service *service.UsersService
+}
+
+func NewHandler() *Handler {
+	storage := service.NewStorage()
+	validator := service.RegisterValidator{}
+
+	handler := &Handler{}
+	handler.service = service.NewUsersService(storage, validator)
+
+	return handler
 }
 
 func (h *Handler) Register(ctx context.Context, req *rpc.RegisterRequest) (*rpc.RegisterResponse, error) {
-	rpc2.NewIDGeneratorJSONClient("http://localhost:81", &http.Client{})
-	//id :=
+	hasher := service.UserHasher{}
 
-	//user := service.NewUser(id, req.Username, req.Password)
-	//
-	//token, err := h.userService.Register(user)
-	//if err != nil {
-	//
-	//}
+	id, err := getUserID("users")
+	if err != nil {
+		return &rpc.RegisterResponse{Error: err.Error()}, nil
+	}
 
-	client := idgenerator.NewIDGeneratorJSONClient("http://localhost:81", &http.Client{})
-	res, err := client.GenerateID(context.Background(), &rpc.Request{Object: object})
+	user := service.NewUser(id, req.Username, req.Password, hasher)
+
+	token, err := h.service.Register(user)
+	if err != nil {
+		return &rpc.RegisterResponse{Error: err.Error()}, nil
+	}
 
 	return &rpc.RegisterResponse{
-		Id:    1,
-		Token: "token",
+		Id:    id,
+		Token: token,
 	}, nil
+}
+
+//todo: pass server addr
+func getUserID(object string) (int64, error) {
+	client := idgRpc.NewIDGeneratorJSONClient("http://localhost:80", &http.Client{})
+
+	req := &idgRpc.Request{Object: object}
+	res, err := client.GenerateID(context.Background(), req)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return res.Id, nil
 }

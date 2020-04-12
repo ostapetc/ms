@@ -1,20 +1,20 @@
 syntax = "proto3";
 
-package ms.idgenerator;
+package services.idg;
 option go_package = "rpc";
 
-// Haberdasher service makes hats for clients.
+// IDGenerator service generates numeric identificators
 service IDGenerator {
   // MakeHat produces a hat of mysterious, randomly-selected color!
   rpc GenerateID(Request) returns (Response);
 }
 
-// Request
+// Request represents service request
 message Request {
   string object = 1;
 }
 
-// Response
+// Response represents service response
 message Response {
   int64 id = 1;
 }
