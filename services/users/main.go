@@ -1,17 +1,16 @@
 package main
 
 import (
-	"flag"
+	"fmt"
 	log "github.com/sirupsen/logrus"
 	"ms/services/users/handler"
 	"ms/services/users/rpc"
 	"ms/utils"
+	"ms/utils/env"
 	"net/http"
 	"os"
 	"time"
 )
-
-const addr = ":80"
 
 func init() {
 	log.SetOutput(os.Stdout)
@@ -19,12 +18,13 @@ func init() {
 }
 
 func main() {
-	addr := flag.String("addr", addr, "server addr")
+	addr := env.GetString("USERS_SERVER_ADDR")
+	idgAddr := env.GetString("IDG_SERVER_ADDR")
 
-	flag.Parse()
+	fmt.Println("listen to", *addr)
 
 	server := &http.Server{
-		Handler:      rpc.NewUsersServer(handler.NewHandler(), nil),
+		Handler:      rpc.NewUsersServer(handler.NewHandler(*idgAddr), nil),
 		Addr:         *addr,
 		ReadTimeout:  1 * time.Second,
 		WriteTimeout: 1 * time.Second,

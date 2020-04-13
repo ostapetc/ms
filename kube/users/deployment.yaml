@@ -1,20 +1,20 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: kube-foo-app
+  name: ms-users-app
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: kube-foo-app
+      app: ms-users-app
   template:
     metadata:
       labels:
-        app: kube-foo-app
+        app: ms-users-app
     spec:
       containers:
-        - name: kube-foo-app
-          image: ssporyshev/foo:v2
+        - name: ms-users-app
+          image: ms-users:latest
           ports:
           - containerPort: 3001
             protocol: TCP

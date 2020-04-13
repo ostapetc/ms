@@ -1,20 +1,20 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: kube-bar-app
+  name: ms-idg-app
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: kube-bar-app
+      app: ms-idg-app
   template:
     metadata:
       labels:
-        app: kube-bar-app
+        app: ms-idg-app
     spec:
       containers:
-        - name: kube-bar-app
-          image: ssporyshev/bar:v2
+        - name: ms-idg-app
+          image: ms-idg:latest
           ports:
           - containerPort: 3002
             protocol: TCP

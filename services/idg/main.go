@@ -1,17 +1,15 @@
 package main
 
 import (
-	"flag"
 	log "github.com/sirupsen/logrus"
 	"ms/services/idg/handler"
 	"ms/services/idg/rpc"
 	"ms/utils"
+	"ms/utils/env"
 	"net/http"
 	"os"
 	"time"
 )
-
-const addr = ":80"
 
 func init() {
 	log.SetOutput(os.Stdout)
@@ -19,8 +17,7 @@ func init() {
 }
 
 func main() {
-	addr := flag.String("addr", addr, "server addr")
-	flag.Parse()
+	addr := env.GetString("IDG_SERVER_ADDR")
 
 	server := &http.Server{
 		Handler:      rpc.NewIDGeneratorServer(&handler.Handler{}, nil),

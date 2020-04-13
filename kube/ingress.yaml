@@ -10,11 +10,11 @@ spec:
   rules:
   - http:
       paths:
-      - path: "/foo"
+      - path: "/idg"
         backend:
-          serviceName: kube-foo-svc
+          serviceName: idg-svc
           servicePort: 80
-      - path: "/bar"
+      - path: "/users"
         backend:
-          serviceName: kube-bar-svc
+          serviceName: users-svc
           servicePort: 80

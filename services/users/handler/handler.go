@@ -9,15 +9,17 @@ import (
 )
 
 type Handler struct {
-	service *service.UsersService
+	service  *service.UsersService
+	idgCient idgRpc.IDGenerator
 }
 
-func NewHandler() *Handler {
+func NewHandler(idgServiceAddr string) *Handler {
 	storage := service.NewStorage()
 	validator := service.RegisterValidator{}
 
 	handler := &Handler{}
 	handler.service = service.NewUsersService(storage, validator)
+	handler.idgCient = idgRpc.NewIDGeneratorJSONClient(idgServiceAddr, &http.Client{})
 
 	return handler
 }
@@ -25,7 +27,7 @@ func NewHandler() *Handler {
 func (h *Handler) Register(ctx context.Context, req *rpc.RegisterRequest) (*rpc.RegisterResponse, error) {
 	hasher := service.UserHasher{}
 
-	id, err := getUserID("users")
+	id, err := h.getUserID()
 	if err != nil {
 		return &rpc.RegisterResponse{Error: err.Error()}, nil
 	}
@@ -43,12 +45,9 @@ func (h *Handler) Register(ctx context.Context, req *rpc.RegisterRequest) (*rpc.
 	}, nil
 }
 
-//todo: pass server addr
-func getUserID(object string) (int64, error) {
-	client := idgRpc.NewIDGeneratorJSONClient("http://localhost:80", &http.Client{})
-
-	req := &idgRpc.Request{Object: object}
-	res, err := client.GenerateID(context.Background(), req)
+func (h Handler) getUserID() (int64, error) {
+	req := &idgRpc.Request{Object: "users"}
+	res, err := h.idgCient.GenerateID(context.Background(), req)
 
 	if err != nil {
 		return 0, err

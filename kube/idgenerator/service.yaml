@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: kube-bar-svc
+  name: ms-idg-svc
   namespace: default
 spec:
   selector:
-    app: kube-bar-app
+    app: ms-idg-app
   ports:
     - port: 80
       targetPort: 3002
