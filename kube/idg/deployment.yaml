@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ms-idg-app
@@ -14,7 +14,9 @@ spec:
     spec:
       containers:
         - name: ms-idg-app
-          image: ms-idg:latest
+          image: ostapetc/ms-idg:latest
+          imagePullPolicy: Always
+          command: [ "./main" ]
           ports:
-          - containerPort: 3002
-            protocol: TCP
+            - containerPort: 3002
+              protocol: TCP

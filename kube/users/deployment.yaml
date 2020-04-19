@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ms-users-app
@@ -14,7 +14,12 @@ spec:
     spec:
       containers:
         - name: ms-users-app
-          image: ms-users:latest
+          image: ostapetc/ms-users:latest
+          imagePullPolicy: Always
+          command: [ "./main" ]
           ports:
-          - containerPort: 3001
-            protocol: TCP
+            - containerPort: 3001
+              protocol: TCP
+          env:
+            - name: "IDG_SERVER_ADDR"
+              value: "http://192.168.64.2:30001"
