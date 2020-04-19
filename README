@@ -6,15 +6,33 @@ export USERS_SERVER_ADDR="http://localhost:80"
 export IDG_SERVER_ADDR="http://localhost:81"
 
 
-
 protoc --proto_path=$GOPATH/src:. --twirp_out=./ --go_out=./ ./services/users/rpc/service.proto
 docker build -t ms-users -f ./users.Dockerfile .
 docker run -p 81:80 ms-users
 
-go run services/users/client/register.go -username user6 -password 123232
-
 export USERS_SERVER_ADDR="http://localhost:80"
 export IDG_SERVER_ADDR=":81"
 
+
+go run services/users/client/register.go -username user6 -password 123232
 @TODO: read from env idg service in users service
 
+//show pods
+kubectl get pods
+
+
+push image
+https://ropenscilabs.github.io/r-docker-tutorial/04-Dockerhub.html
+
+
+kubectl get pods
+kubectl logs $POD_NAME
+kubectl describe pods
+kubectl exec -ti $POD_NAME bash
+
+
+docker push ostapetc/ms-idg
+
+docker login
+docker tag 87d6497c20bb ostapetc/ms-idg
+docker push ostapetc/ms-idg

@@ -21,5 +21,12 @@ spec:
             - containerPort: 3001
               protocol: TCP
           env:
+            - name: "POD_IP"
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
             - name: "IDG_SERVER_ADDR"
-              value: "http://192.168.64.2:30001"
+              valueFrom:
+                configMapKeyRef:
+                  name: service-config
+                  key: IDG_SERVER_ADDR

@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: service-config
+  namespace: default
+data:
+  IDG_SERVER_ADDR: "http://192.168.64.2:30001"
